@@ -1,43 +1,56 @@
 <template>
 	<img v-if="image" :src="image" alt="bg" />
 	<div class="bg-dark"></div>
-  <div class="indecision-container">
-    <input v-model="question" type="text" name="" placeholder="Hazme una pregunta">
-    <p>Recuerda terminar con un signo de interrogación (?)</p>
-    <div>
-      <h2 v-if="isValidQuestion">{{ question }}</h2>
-      <h1>{{ answer }}</h1>
-    </div>
-  </div>
+	<div class="indecision-container">
+		<input
+			v-model="question"
+			type="text"
+			name=""
+			placeholder="Hazme una pregunta"
+		/>
+		<p>Recuerda terminar con un signo de interrogación (?)</p>
+		<div>
+			<h2 v-if="isValidQuestion">{{ question }}</h2>
+			<h1>{{ answer }}</h1>
+		</div>
+	</div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      question: null,
-      answer: null,
-      image: null,
-      isValidQuestion: false
-    }
-  },
-  methods: {
-    async getAnswer() {
-      this.answer = 'Pensando...'
-      const { answer, image } = await fetch('https://yesno.wtf/api')
-        .then( res => res.json() )
-      this.answer = answer === 'yes' ? 'Sí' : 'No!'
-      this.image = image
-    }
-  },
-  watch: {
-    question( value ) {
-      this.isValidQuestion = false
-      if( !value.includes('?') ) return
-      this.isValidQuestion = true
-      this.getAnswer()
-    }
-  }
+	data() {
+		return {
+			question: null,
+			answer: null,
+			image: null,
+			isValidQuestion: false,
+		};
+	},
+	methods: {
+		async getAnswer() {
+			try {
+				this.answer = 'Pensando...';
+				const { answer, image } = await fetch('https://yesno.wtf/api').then(
+					(res) => res.json()
+				);
+				this.answer = answer === 'yes' ? 'Sí' : 'No!';
+				this.image = image;
+			} catch (error) {
+        console.log('Indecision Component', error);
+        this.answer = 'No se pudo conectar con el API'
+        this.image = null
+      }
+		},
+	},
+	watch: {
+		question(value) {
+			this.isValidQuestion = false;
+			console.log({ value });
+			if (!value.includes('?')) return;
+			this.isValidQuestion = true;
+			this.getAnswer();
+		},
+	},
 };
 </script>
 
@@ -64,7 +77,7 @@ img,
 
 input {
 	width: 250px;
-  margin-bottom: 15px;
+	margin-bottom: 15px;
 	padding: 10px 15px;
 	border-radius: 5px;
 	border: none;
