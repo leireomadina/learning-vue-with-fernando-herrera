@@ -7,21 +7,34 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 // import NoPageFound from '../modules/shared/pages/NoPageFound'
 
 const routes = [
-	{ 
+	{
 		path: '/',
-		component: import(/* webpackChunkName: "ListPage" */ '../modules/pokemon/pages/ListPage')
+		redirect: '/home'
+	},
+	{ 
+		path: '/home',
+		name: 'home',
+		component: () => import(/* webpackChunkName: "ListPage" */ '../modules/pokemon/pages/ListPage')
 	},
 	{
 		path: '/about',
+		name: 'about',
 		component: () => import(/* webpackChunkName: "AboutPage" */ '../modules/pokemon/pages/AboutPage')
 	},
 	{
-		path: '/id',
-		component: import(/* webpackChunkName: "PokemonPage" */ '../modules/pokemon/pages/PokemonPage')
+		path: '/pokemonid/:id',
+		name: 'pokemon-id',
+		component: () => import(/* webpackChunkName: "PokemonPage" */ '../modules/pokemon/pages/PokemonPage'),
+		// passing the id as a prop to have type and required checking
+		props: ( route ) => {
+			const id = Number( route.params.id )
+			console.log(id)
+			return isNaN( id ) ? { id: 1 } : { id }
+		}
 	},
 	{
 		path: '/:pathMatch(.*)*',
-		component: import(/* webpackChunkName: "PokemoNoPageFoundnPage" */ '../modules/shared/pages/NoPageFound')
+		component: () => import(/* webpackChunkName: "PokemoNoPageFoundnPage" */ '../modules/shared/pages/NoPageFound')
 	},
 ]
 
