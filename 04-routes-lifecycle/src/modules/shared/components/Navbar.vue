@@ -18,9 +18,11 @@ export default {
 	data() {
 		return {
 			links: [
-				{ to: '/home', name: 'Pokemons' },
-				{ to: '/pokemonid/100', name: 'Por ID' },
-				{ to: '/about', name: 'About' },
+				{ to: 'pokemon-home', name: 'Pokemons' },
+				{ to: 'pokemon-id', name: 'Por ID', id: 151 },
+				{ to: 'pokemon-about', name: 'Characters' },
+				{ to: 'dbz-characters', name: 'DBZ-Characters' },
+				{ to: 'dbz-about', name: 'DBZ-About' },
 				{ to: 'https://google.com', name: 'Google' },
 			]
 		}
@@ -33,7 +35,7 @@ export default {
 
 <style scoped>
 nav {
-	max-width: 20rem;
+	max-width: 44rem;
 	margin: 2rem auto;
 	display: flex;
 	justify-content: space-between;
