@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import isAuthenticatedGuard from './auth-guard'
 
 // import AboutPage from '../modules/pokemon/pages/AboutPage'
 // import ListPage from '../modules/pokemon/pages/ListPage'
@@ -46,6 +47,7 @@ const routes = [
 	{
 		path: '/dbz',
 		name: 'dbz',
+		beforeEnter: [ isAuthenticatedGuard ],
 		component: () => import(/* webpackChunkName: "DbzLayout" */ '@/modules/dbz/layouts/DragonBallLayout'),
 		children: [
 			{
@@ -74,5 +76,46 @@ const router = createRouter({
 	history: createWebHashHistory(),
 	routes,
 })
+
+// Global synchronous guard
+/*
+router.beforeEach( (to, from, next) => {
+	// console.log(to, from, next)
+
+	const random = Math.random() * 100
+	if( random > 50 ) {
+		console.log('Authenticated!')
+		next()
+	} else {
+		console.log(random, 'Denied by the guard :(')
+		next({ name: 'pokemon-home' })
+	}
+})
+*/
+
+// Global asynchronous guard
+/*
+const canAccess = () => {
+	return new Promise( resolve => {
+
+		const random = Math.random() * 100
+		if( random > 50 ) {
+			console.log('Authenticated!')
+			resolve(true)
+		} else {
+			console.log(random, 'Denied by the guard :(')
+			resolve(false)
+		}
+
+	})
+}
+
+router.beforeEach( async(to, from, next) => {
+	const authorized = await canAccess()
+	authorized
+		? next() 
+		: next({ name: 'pokemon-home' })
+})
+*/
 
 export default router
